@@ -1,8 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-
-app.use(bodyParser.json());
+const getListHandler = require('./requestHandlers/getList');
 
 app.use((req, res, next) => {
   console.log(`${req.method} request for ${req.path}`);
@@ -13,5 +12,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(__dirname + '/../client/dist'));
+
+app.get('/server/getCoinList', getListHandler);
 
 app.listen(process.env.PORT || 3000, console.log(`crypto-portfolio listening on port ${process.env.PORT || 3000}`));
