@@ -1,0 +1,28 @@
+{
+  "name": "crypto-portfolio",
+  "version": "0.0.1",
+  "description": "cryptocurrency portfolio written in js",
+  "main": "server/index.js",
+  "dependencies": {
+    "bootstrap": "^4.0.0-beta.3",
+    "css-loader": "^0.28.7",
+    "express": "^4.16.2",
+    "node-fetch": "^1.7.3",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "reactstrap": "^5.0.0-alpha.4",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.10.0"
+  },
+  "engines": {
+    "node": "^9.2.0",
+    "npm": "^5.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "andydam",
+  "license": "ISC"
+}
