@@ -1,32 +1,38 @@
 const fetch = require('node-fetch');
+const db = require('../db');
 
 module.exports = {
-  coinList: {
-    list: [],
-    updatedAt: new Date()
-  },
   fetchCoinList() {
-    console.log('fetching list of cryptocurrencies from https://min-api.cryptocompare.com/data/all/coinlist');
-    return fetch('https://min-api.cryptocompare.com/data/all/coinlist')
-      .then(resp => resp.json())
-      .then(data => {
-        if (data['Response'] !== 'Success') {
-          console.log(`error fetching list, ${data['Message']}`);
-          return Promise.reject(data['Message']);
-        }
+    if (Date.now() - db.symbols.updatedAt > 3600000) {
+      console.log('fetching list of cryptocurrencies from https://min-api.cryptocompare.com/data/all/coinlist');
+      return fetch('https://min-api.cryptocompare.com/data/all/coinlist')
+        .then(resp => resp.json())
+        .then(data => {
+          if (data['Response'] !== 'Success') {
+            console.log(`error fetching list of symbols, ${data['Message']}`);
+            return Promise.reject(data['Message']);
+          }
 
-        module.exports.coinList.list = [];
-        for (let coin in data['Data']) {
-          module.exports.coinList.list.push({
-            symbol: data['Data'][coin]['Symbol'],
-            fullName: data['Data'][coin]['FullName'],
-            id: data['Data'][coin]['Id']
-          });
-        }
-        module.exports.coinList.updatedAt = new Date();
+          let tempSymbolArr = [];
+          for (let coin in data['Data']) {
+            tempSymbolArr.push({
+              symbol: data['Data'][coin]['Symbol'],
+              fullName: data['Data'][coin]['FullName'],
+              id: Number(data['Data'][coin]['Id'])
+            });
+          }
 
-        console.log(`${module.exports.coinList.list.length} symbols fetched, updated at ${module.exports.coinList.updatedAt}`);
-        return module.exports.coinList;
-      });
+          return db.symbols.clear()
+            .then(() => Promise.all(tempSymbolArr.map(coin => db.symbols.post(coin))));
+        })
+        .then(symbolDocs => {
+          db.symbols.updatedAt = Date.now();
+          console.log(`${symbolDocs.length} symbols fetched, updated at ${Date(db.symbols.updatedAt)}`);
+          return symbolDocs;
+        });
+    } else {
+      console.log('list of cryptocurrencies recently stored, pulling from database');
+      return db.symbols.get();
+    }
   }
 };
