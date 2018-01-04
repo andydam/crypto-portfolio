@@ -17,7 +17,11 @@ module.exports = {
 
         module.exports.coinList.list = [];
         for (let coin in data['Data']) {
-          module.exports.coinList.list.push({[data['Data'][coin]['Symbol']]: data['Data'][coin]['FullName']});
+          module.exports.coinList.list.push({
+            symbol: data['Data'][coin]['Symbol'],
+            fullName: data['Data'][coin]['FullName'],
+            id: data['Data'][coin]['Id']
+          });
         }
         module.exports.coinList.updatedAt = new Date();
 
