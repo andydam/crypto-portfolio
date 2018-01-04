@@ -8,17 +8,17 @@ module.exports = {
   },
   module: {
     rules: [
+      { 
+        test: /\.jsx?$/, 
+        loader: 'babel-loader', 
+        query: {
+          presets: ['react', 'es2015']
+        },
+        exclude: /node_modules/ 
+      },
       {
         test: /\.css$/,
-        use: [
-          { loader: 'style-loader' },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true
-            }
-          }
-        ]
+        use: ['style-loader', 'css-loader']
       }
     ]
   }
