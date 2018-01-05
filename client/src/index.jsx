@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Col, Container } from 'reactstrap';
+import { Col, Container, Modal, ModalHeader, ModalBody, Progress, ModalFooter, Button} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import AddBuyOrder from './components/AddBuyOrder.jsx';
@@ -14,7 +14,12 @@ export default class App extends React.Component {
       coinList: [],
       orderList: [],
       orderStatsList: [],
-      totalStats: {}
+      totalStats: {},
+      loading: 20,
+      errorModal: {
+        message: '',
+        show: false
+      }
     };
   }
 
@@ -28,6 +33,19 @@ export default class App extends React.Component {
   render() {
     return (
       <Container>
+        <Modal isOpen={this.state.loading === 100 ? false : true}>
+          <ModalBody>
+            <Progress animated value={`${this.state.loading}`} />
+          </ModalBody>
+        </Modal>
+        <Modal isOpen={this.state.errorModal.show}>
+          <ModalHeader>
+            {this.state.errorModal.message}
+          </ModalHeader>
+          <ModalFooter>
+            <Button color="secondary" onClick={() => this.setState({errorModal: {show: false}})}>Okay</Button>
+          </ModalFooter>
+        </Modal>
         <Col sm="12" md={{ size: 8, offset: 2 }}>
           <h1 className="mt-4">crypto-portfolio</h1>
           <AddBuyOrder coinList={this.state.coinList} addToPortfolio={buy => this.postBuyToServer(buy)} />
@@ -41,38 +59,47 @@ export default class App extends React.Component {
   getListOfCoins() {
     fetch('/server/getCoinList')
       .then(resp => resp.json())
-      .then(data => this.setState({coinList: data}))
+      .then(data => this.setState({coinList: data, loading: this.state.loading + 20}))
       .catch(console.error);
   }
 
   getListOfOrders() {
     fetch('/server/getOrderList')
       .then(resp => resp.json())
-      .then(data => this.setState({orderList: data}))
+      .then(data => this.setState({orderList: data, loading: this.state.loading + 20}))
       .catch(console.error);
   }
 
   getListOfOrderStats() {
     fetch('/server/getOrderStatsList')
       .then(resp => resp.json())
-      .then(data => this.setState({orderStatsList: data}))
+      .then(data => this.setState({orderStatsList: data, loading: this.state.loading + 20}))
       .catch(console.error);
   }
 
   getTotalStats() {
     fetch('/server/getTotalStats')
       .then(resp => resp.json())
-      .then(data => this.setState({totalStats: data}))
+      .then(data => this.setState({totalStats: data, loading: this.state.loading + 20}))
       .catch(console.error);
   }
 
   postBuyToServer(order) {
     if (order.coin === '') {
-      console.log('invalid coin');
+      this.setState({errorModal: {
+        message: 'Please select a coin',
+        show: true
+      }});
     } else if (order.amount <= 0 || order.amount === '' || Number(order.amount) === NaN) {
-      console.log('invalid amount');
+      this.setState({errorModal: {
+        message: 'Please enter a valid amount',
+        show: true
+      }});
     } else if (order.price <= 0 || order.price === '' || Number(order.price) === NaN) {
-      console.log('invalid price');
+      this.setState({errorModal: {
+        message: 'Please enter a valid cost',
+        show: true
+      }});
     } else {
       console.log(`adding ${order.amount} ${order.coin} at value of $${order.price}`);
       fetch('/server/addBuyOrder', {
@@ -84,6 +111,7 @@ export default class App extends React.Component {
       })
         .then(resp => resp.json())
         .then(() => {
+          this.setState({loading: 40});
           this.getListOfOrders();
           this.getTotalStats();
           this.getListOfOrderStats();
