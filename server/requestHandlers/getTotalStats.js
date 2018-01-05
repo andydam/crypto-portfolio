@@ -11,9 +11,13 @@ module.exports = (req, res) => {
       })))))
     .then(stats => stats.reduce((prev, curr) => ({
       startingValue: Number((prev.startingValue + curr.startingValue).toFixed(2)),
-      currentValue: Number((prev.currentValue + curr.currentValue).toFixed(2)),
-      percentChange: Number((((Number(prev.currentValue + curr.currentValue) - Number(prev.startingValue + curr.startingValue)) / Number(prev.startingValue + curr.startingValue)) * 100).toFixed(2))
+      currentValue: Number((prev.currentValue + curr.currentValue).toFixed(2))
     })))
+    .then(stats => ({
+      startingValue: stats.startingValue,
+      currentValue: stats.currentValue,
+      percentChange: (((Number(stats.currentValue) - Number(stats.startingValue)) / Number(stats.startingValue)) * 100).toFixed(2)
+    }))
     .then(stats => res.status(200).send(JSON.stringify(stats)))
     .catch(err => res.status(500).send(JSON.stringify(err.message)));
 };

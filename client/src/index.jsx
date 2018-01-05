@@ -13,13 +13,15 @@ export default class App extends React.Component {
     this.state = {
       coinList: [],
       orderList: [],
-      orderStatsList: []
+      orderStatsList: [],
+      totalStats: {}
     };
   }
 
   componentWillMount() {
     this.getListOfCoins();
     this.getListOfOrders();
+    this.getTotalStats();
     this.getListOfOrderStats();
   }
 
@@ -29,7 +31,7 @@ export default class App extends React.Component {
         <Col sm="12" md={{ size: 8, offset: 2 }}>
           <h1>crypto-portfolio</h1>
           <AddBuyOrder coinList={this.state.coinList} addToPortfolio={buy => this.postBuyToServer(buy)} />
-          <TotalValue />
+          <TotalValue stats={this.state.totalStats}/>
           <OrderList orderList={this.state.orderList} orderStatsList={this.state.orderStatsList}/>
         </Col>
       </Container>
@@ -57,6 +59,13 @@ export default class App extends React.Component {
       .catch(console.error);
   }
 
+  getTotalStats() {
+    fetch('/server/getTotalStats')
+      .then(resp => resp.json())
+      .then(data => this.setState({totalStats: data}))
+      .catch(console.error);
+  }
+
   postBuyToServer(order) {
     console.log(`adding ${order.amount} ${order.coin} at value of $${order.price}`);
     fetch('/server/addBuyOrder', {
@@ -69,6 +78,7 @@ export default class App extends React.Component {
       .then(resp => resp.json())
       .then(() => {
         this.getListOfOrders();
+        this.getTotalStats();
         this.getListOfOrderStats();
       })
       .catch(console.error);

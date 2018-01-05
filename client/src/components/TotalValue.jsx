@@ -1,11 +1,14 @@
 import React from 'react';
-import { Container } from 'reactstrap';
+import { Container, Fade, ListGroupItem} from 'reactstrap';
 
-export default props => {
+export default ({stats}) => {
   return (
     <Container className="mt-4 ml-4">
-      <h4>Total Value of Portfolio: $<br />
-      Percent change: %</h4>
+      <ListGroupItem color={stats.percentChange ? Number(stats.percentChange) > 0 ? 'success' : 'danger' : ''}>
+        <h4>Starting Value: ${stats.startingValue}<br />
+        Current Value: ${stats.currentValue}<br />
+        Change: {stats.percentChange}%</h4>
+      </ListGroupItem>
     </Container>
   );
 };
