@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const getListHandler = require('./requestHandlers/getList');
+const getCoinListHandler = require('./requestHandlers/getCoinList');
+const getOrderListHandler = require('./requestHandlers/getOrderList');
 const addBuyHandler = require('./requestHandlers/addBuy');
 
 app.use('/server/addBuyOrder', bodyParser.json());
@@ -16,7 +17,9 @@ app.use((req, res, next) => {
 
 app.use(express.static(__dirname + '/../client/dist'));
 
-app.get('/server/getCoinList', getListHandler);
+app.get('/server/getCoinList', getCoinListHandler);
+
+app.get('/server/getOrderList', getOrderListHandler);
 
 app.post('/server/addBuyOrder', addBuyHandler);
 
