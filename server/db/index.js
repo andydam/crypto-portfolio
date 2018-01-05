@@ -12,7 +12,7 @@ let Symbols = mongoose.model('Symbols', new mongoose.Schema({
 }));
 
 let Orders = mongoose.model('Orders', new mongoose.Schema({
-  id: {type: Number, unique: true, default: new Date().getTime()},
+  id: {type: Number, unique: true},
   coin: String,
   amount: Number,
   price: Number
