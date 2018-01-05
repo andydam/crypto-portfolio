@@ -18,6 +18,7 @@ export default class AddBuyOrder extends React.Component {
           <Label for="selectCoin" sm={2}>Select Coin</Label>
           <Col sm={10}>
             <Input type="select" name="selectCoinVal" id="selectCoin" value={this.state.selectCoinVal} onChange={e => this.handleChange(e)} required>
+              <option></option>
               {this.props.coinList.map(coin => (<option value={coin.symbol} key={coin.id}>{ coin.fullName }</option>))}
             </Input>
           </Col>

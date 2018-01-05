@@ -67,21 +67,29 @@ export default class App extends React.Component {
   }
 
   postBuyToServer(order) {
-    console.log(`adding ${order.amount} ${order.coin} at value of $${order.price}`);
-    fetch('/server/addBuyOrder', {
-      method: 'POST',
-      body: JSON.stringify(order),
-      headers: {
-        'content-type': 'application/json'
-      }
-    })
-      .then(resp => resp.json())
-      .then(() => {
-        this.getListOfOrders();
-        this.getTotalStats();
-        this.getListOfOrderStats();
+    if (order.coin === '') {
+      console.log('invalid coin');
+    } else if (order.amount <= 0 || order.amount === '' || Number(order.amount) === NaN) {
+      console.log('invalid amount');
+    } else if (order.price <= 0 || order.price === '' || Number(order.price) === NaN) {
+      console.log('invalid price');
+    } else {
+      console.log(`adding ${order.amount} ${order.coin} at value of $${order.price}`);
+      fetch('/server/addBuyOrder', {
+        method: 'POST',
+        body: JSON.stringify(order),
+        headers: {
+          'content-type': 'application/json'
+        }
       })
-      .catch(console.error);
+        .then(resp => resp.json())
+        .then(() => {
+          this.getListOfOrders();
+          this.getTotalStats();
+          this.getListOfOrderStats();
+        })
+        .catch(console.error);
+    }
   }
 }
 
