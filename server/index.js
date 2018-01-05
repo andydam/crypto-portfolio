@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const getCoinListHandler = require('./requestHandlers/getCoinList');
 const getOrderListHandler = require('./requestHandlers/getOrderList');
+const getOrderStatsListHandler = require('./requestHandlers/getOrderStatsList');
 const addBuyHandler = require('./requestHandlers/addBuy');
 
 app.use('/server/addBuyOrder', bodyParser.json());
@@ -20,6 +21,8 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.get('/server/getCoinList', getCoinListHandler);
 
 app.get('/server/getOrderList', getOrderListHandler);
+
+app.get('/server/getOrderStatsList', getOrderStatsListHandler);
 
 app.post('/server/addBuyOrder', addBuyHandler);
 

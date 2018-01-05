@@ -36,6 +36,7 @@ module.exports = {
     }
   },
   getCoinData(symbol) {
+    console.log(`fetching coin stats from https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${symbol}&tsyms=USD`);
     return fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${symbol}&tsyms=USD`)
       .then(resp => resp.json())
       .then(data => {
