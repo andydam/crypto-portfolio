@@ -13,7 +13,7 @@ export default class AddBuyOrder extends React.Component {
 
   render() {
     return (
-      <Container className="mt-4 ml-4">
+      <Container className="mt-4">
         <FormGroup row>
           <Label for="selectCoin" sm={2}>Select Coin</Label>
           <Col sm={10}>

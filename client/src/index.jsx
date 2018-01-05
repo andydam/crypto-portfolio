@@ -29,7 +29,7 @@ export default class App extends React.Component {
     return (
       <Container>
         <Col sm="12" md={{ size: 8, offset: 2 }}>
-          <h1>crypto-portfolio</h1>
+          <h1 className="mt-4">crypto-portfolio</h1>
           <AddBuyOrder coinList={this.state.coinList} addToPortfolio={buy => this.postBuyToServer(buy)} />
           <TotalValue stats={this.state.totalStats}/>
           <OrderList orderList={this.state.orderList} orderStatsList={this.state.orderStatsList}/>
