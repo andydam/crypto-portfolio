@@ -4,6 +4,7 @@ const app = express();
 const getCoinListHandler = require('./requestHandlers/getCoinList');
 const getOrderListHandler = require('./requestHandlers/getOrderList');
 const getOrderStatsListHandler = require('./requestHandlers/getOrderStatsList');
+const getTotalStatsHandler = require('./requestHandlers/getTotalStats');
 const addBuyHandler = require('./requestHandlers/addBuy');
 
 app.use('/server/addBuyOrder', bodyParser.json());
@@ -23,6 +24,8 @@ app.get('/server/getCoinList', getCoinListHandler);
 app.get('/server/getOrderList', getOrderListHandler);
 
 app.get('/server/getOrderStatsList', getOrderStatsListHandler);
+
+app.get('/server/getTotalStats', getTotalStatsHandler);
 
 app.post('/server/addBuyOrder', addBuyHandler);
 

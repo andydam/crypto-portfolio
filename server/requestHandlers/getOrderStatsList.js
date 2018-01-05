@@ -9,9 +9,8 @@ module.exports = (req, res) => {
         id: order['id'],
         coin: stats['FROMSYMBOL'],
         currentValue: (stats['PRICE'] * order['amount']).toFixed(2),
-        percentChange: ((stats['PRICE'] * order['amount'] / order['price']) * 100).toFixed(2),
-        percentChangeToday: (stats['CHANGEPCT24HOUR']).toFixed(2)
+        percentChange: ((((stats['PRICE'] * order['amount']) - order['price']) / order['price']) * 100).toFixed(2)
       })))))
     .then(list => res.status(200).send(JSON.stringify(list)))
-    .catch(err => res.status(500).send(JSON.stringify(err)));
+    .catch(err => res.status(500).send(JSON.stringify(err.message)));
 };

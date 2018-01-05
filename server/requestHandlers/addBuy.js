@@ -6,5 +6,5 @@ module.exports = (req, res) => {
   req.body['id'] = Date.now();
   return db.orders.post(req.body)
     .then(buy => res.status(200).send(JSON.stringify(buy)))
-    .catch(err => res.status(500).send(JSON.stringify(err)));
+    .catch(err => res.status(500).send(JSON.stringify(err.message)));
 };
