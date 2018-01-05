@@ -40,6 +40,9 @@ module.exports = {
     },
     clear() {
       return Orders.find().remove().exec();
+    },
+    remove(order) {
+      return Orders.find({'id': order.id}).remove().exec();
     }
   }
 };

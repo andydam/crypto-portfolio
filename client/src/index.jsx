@@ -50,7 +50,7 @@ export default class App extends React.Component {
           <h1 className="mt-4">crypto-portfolio</h1>
           <AddBuyOrder coinList={this.state.coinList} addToPortfolio={buy => this.postBuyToServer(buy)} />
           <TotalValue stats={this.state.totalStats}/>
-          <OrderList orderList={this.state.orderList} orderStatsList={this.state.orderStatsList}/>
+          <OrderList orderList={this.state.orderList} orderStatsList={this.state.orderStatsList} removeBuy={buy => this.removeBuy(buy)}/>
         </Col>
       </Container>
     );
@@ -118,6 +118,24 @@ export default class App extends React.Component {
         })
         .catch(console.error);
     }
+  }
+
+  removeBuy(buy) {
+    console.log(`remove order ${buy.id} ${buy.amount} ${buy.coin} at value of $${buy.price}`);
+    fetch('/server/removeBuyOrder', {
+      method: 'POST',
+      body: JSON.stringify(buy),
+      headers: {
+        'content-type': 'application/json'
+      }})
+      .then(resp => resp.json())
+      .then(() => {
+        this.setState({loading: 40});
+        this.getListOfOrders();
+        this.getTotalStats();
+        this.getListOfOrderStats();
+      })
+      .catch(console.error);
   }
 }
 
