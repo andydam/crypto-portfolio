@@ -17,7 +17,7 @@ export default class AddBuyOrder extends React.Component {
         <FormGroup row>
           <Label for="selectCoin" sm={2}>Select Coin</Label>
           <Col sm={10}>
-            <Input type="select" name="selectCoinVal" id="selectCoin" value={this.state.selectCoinVal} onChange={e => this.handleChange(e)}>
+            <Input type="select" name="selectCoinVal" id="selectCoin" value={this.state.selectCoinVal} onChange={e => this.handleChange(e)} required>
               {this.props.coinList.map(coin => (<option value={coin.symbol} key={coin.id}>{ coin.fullName }</option>))}
             </Input>
           </Col>
@@ -27,7 +27,7 @@ export default class AddBuyOrder extends React.Component {
           <Col sm={4}>
             <Input type="number" name="amountCoinVal"id="amountCoin" value={this.state.amountCoinVal} onChange={e => this.handleChange(e)} />
           </Col>
-          <Label for="costCoin" sm={2}>Total Cost in USD</Label>
+          <Label for="costCoin" sm={2}>Cost in USD</Label>
           <Col sm={4}>
             <Input type="number" name="costCoinVal" id="costCoin" value={this.state.costCoinVal} onChange={e => this.handleChange(e)} />
           </Col>

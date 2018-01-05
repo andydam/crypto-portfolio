@@ -1,27 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Container } from 'reactstrap';
+import { Col, Container } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import AddBuyOrder from './components/AddBuyOrder.jsx';
+import OrderList from './components/OrderList.jsx';
+import TotalValue from './components/TotalValue.jsx';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      coinList: []
+      coinList: [],
+      orderList: []
     };
   }
 
   componentWillMount() {
     this.getListOfCoins();
+    this.getListOfOrders();
   }
 
   render() {
     return (
       <Container>
-        <h1>crypto-portfolio</h1>
-        <AddBuyOrder coinList={this.state.coinList} addToPortfolio={buy => this.postBuyToServer(buy)} />
+        <Col sm="12" md={{ size: 8, offset: 2 }}>
+          <h1>crypto-portfolio</h1>
+          <AddBuyOrder coinList={this.state.coinList} addToPortfolio={buy => this.postBuyToServer(buy)} />
+          <TotalValue />
+          <OrderList orderList={this.state.orderList}/>
+        </Col>
       </Container>
     );
   }
@@ -33,8 +41,25 @@ export default class App extends React.Component {
       .catch(console.error);
   }
 
-  postBuyToServer({coin, amount, price}) {
-    console.log(`adding ${amount} ${coin} at value of $${price}`);
+  getListOfOrders() {
+    fetch('/server/getOrderList')
+      .then(resp => resp.json())
+      .then(data => this.setState({orderList: data}))
+      .catch(console.error);
+  }
+
+  postBuyToServer(order) {
+    console.log(`adding ${order.amount} ${order.coin} at value of $${order.price}`);
+    fetch('/server/addBuyOrder', {
+      method: 'POST',
+      body: JSON.stringify(order),
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+      .then(resp => resp.json())
+      .then(() => this.getListOfOrders())
+      .catch(console.error);
   }
 }
 
