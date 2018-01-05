@@ -4,9 +4,9 @@ import OrderListEntry from './OrderListEntry.jsx';
 
 export default ({orderList}) => {
   return (
-    <Container>
+    <Container className="mt-4 ml-4">
       <ListGroup>
-        {orderList.map(order => (<OrderListEntry order={order} key={order.id} />))}
+        {orderList.map(order => (<OrderListEntry order={order} key={order[0].id} />))}
       </ListGroup>
     </Container>
   );

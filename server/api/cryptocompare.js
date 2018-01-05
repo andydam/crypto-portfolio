@@ -34,5 +34,17 @@ module.exports = {
       console.log('list of cryptocurrencies recently stored, pulling from database');
       return db.symbols.get();
     }
+  },
+  getCoinData(symbol) {
+    return fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${symbol}&tsyms=USD`)
+      .then(resp => resp.json())
+      .then(data => {
+        if (data['Response'] === 'Error') {
+          console.log(`error fetching coin data, ${data['Message']}`);
+          return Promise.reject(data['Message']);
+        }
+
+        return data['RAW'][symbol]['USD'];
+      });
   }
 };
